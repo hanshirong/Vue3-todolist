@@ -1,9 +1,12 @@
 <template>
   <h1>{{ msg }}</h1>
-
+  <div class="inputs">
+    代办：<input type="text" v-model="newItem">
+    <button v-on:click="addNewItem()">添加</button>
+  </div>
   <ul class="ToDoList">
     <li v-for="(item,index) in items" :key="item.id">
-        <span v-text="item.title"></span>
+        <span v-text="`${item.title}-----${item.id}`"></span>
         <button v-on:click="deleteItem(item.id)">完成</button>
     </li>
   </ul>
@@ -33,7 +36,8 @@ export default defineComponent({
         title:"学习"
       },
     ])
-
+    const newItem = ref()
+    let id = 4
     let deleteItem = (id:number) => {
       // 根据id删除item
       items.forEach((item,index) =>{
@@ -43,10 +47,26 @@ export default defineComponent({
       })
       console.log(items)
     }
+
+    let addNewItem = () =>{
+      if(!newItem.value){
+        return
+      }
+      let obj = {
+        // id应该是唯一的，不可以用items.length +1 否则就会出问题
+        id:id,
+        title:newItem.value
+      }
+      items.push(obj)
+      id++
+      newItem.value = ''
+    }
     
     return{
       items,
-      deleteItem
+      deleteItem,
+      newItem,
+      addNewItem
     }
 
   }
